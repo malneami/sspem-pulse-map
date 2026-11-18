@@ -8,6 +8,8 @@
   4. ينزّل صور المنشأة والمتحدث (أو يولّد صوراً توضيحية).
   5. يضيف المشاركة إلى data/entries.json (أو data/demo-entries.json للتجريبي) ثم يحذف ملف المهمة.
 
+مهمة {"op": "remove", "id": ...} تُخفي مشاركة من الخريطة وتحذف ملفاتها.
+
 يعمل محلياً أو في GitHub Actions. يحتاج: ffmpeg، rsvg-convert، Pillow مع raqm، وخطوط Tajawal في FONT_DIR.
 """
 from __future__ import annotations
@@ -157,8 +159,29 @@ def demo_speaker(dest: Path):
     im.filter(ImageFilter.SMOOTH).save(dest)
 
 
+def remove(job: dict, job_path: Path) -> dict:
+    """إخفاء مشاركة من الخريطة: تُحذف من القائمة ومعها ملفاتها المنشورة."""
+    eid = job["id"]
+    for name in ("entries.json", "demo-entries.json"):
+        target = ROOT / "data" / name
+        if target.exists():
+            entries = json.loads(target.read_text(encoding="utf-8"))
+            kept = [e for e in entries if e.get("id") != eid]
+            if len(kept) != len(entries):
+                target.write_text(json.dumps(kept, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    folder = ROOT / "media" / eid
+    if folder.is_dir() and folder.parent == ROOT / "media":
+        for f in folder.iterdir():
+            f.unlink()
+        folder.rmdir()
+    job_path.unlink()
+    return {"id": eid, "hospital": "(removed)"}
+
+
 def process(job_path: Path) -> dict:
     job = json.loads(job_path.read_text(encoding="utf-8"))
+    if job.get("op") == "remove":
+        return remove(job, job_path)
     entry = job["entry"]
     eid = entry["id"]
     out = ROOT / "media" / eid
