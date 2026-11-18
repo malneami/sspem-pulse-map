@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>خريطة النبض | الجمعية السعودية لطب طوارئ الأطفال</title>
+<meta name="description" content="نبض واحد.. لأطفال الوطن — فرق طوارئ الأطفال في مناطق المملكة الـ 13 بنصيحة سلامة واحدة من كل مستشفى.">
+<meta property="og:title" content="خريطة النبض">
+<meta property="og:description" content="نبض واحد.. لأطفال الوطن — نصيحة سلامة واحدة من فريق طوارئ الأطفال في كل مستشفى.">
+<meta property="og:url" content="https://malneami.github.io/sspem-pulse-map/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap">
+<style>
+  :root { --navy:#1b2a5c; --navy-deep:#111b40; --amber:#f2a33a; --gold:#d4af37; }
+  body { margin:0; min-height:100dvh; font-family:Tajawal,system-ui,sans-serif; color:#fff; background:radial-gradient(1000px 600px at 80% -10%, rgba(242,163,58,.18), transparent 60%), linear-gradient(160deg,#16224f,#0c1433); display:grid; place-items:center; text-align:center; }
+  main { padding:32px 18px; max-width:560px; }
+  img { width:210px; }
+  h1 { margin:18px 0 4px; font-size:44px; font-weight:900; color:var(--gold); }
+  .slogan { font-size:20px; font-weight:800; color:var(--amber); margin:0 0 18px; }
+  p { line-height:1.8; color:rgba(255,255,255,.85); }
+  .stats { display:flex; gap:10px; justify-content:center; margin:22px 0; }
+  .stat { background:rgba(255,255,255,.07); border:1.5px solid rgba(212,175,55,.35); border-radius:14px; padding:10px 14px; min-width:96px; }
+  .stat b { display:block; font-size:28px; color:var(--gold); }
+  .stat span { font-size:13px; color:rgba(255,255,255,.75); font-weight:700; }
+  a.btn { display:inline-block; margin-top:6px; padding:14px 30px; border-radius:12px; font-weight:900; font-size:18px; text-decoration:none; color:var(--navy-deep); background:linear-gradient(180deg,#f6c46a,var(--amber)); box-shadow:0 6px 0 #a86a12; }
+  svg { width:min(420px,80vw); height:40px; margin:18px auto 0; display:block; }
+  svg path { stroke:var(--amber); stroke-width:3; fill:none; stroke-dasharray:420; animation:beat 2.4s linear infinite; }
+  @keyframes beat { from { stroke-dashoffset:420; } to { stroke-dashoffset:0; } }
+  @media (prefers-reduced-motion: reduce) { svg path { animation:none; stroke-dasharray:none; } }
+</style>
+</head>
+<body>
+<main>
+  <img src="assets/logo-gold.svg" alt="الجمعية السعودية لطب طوارئ الأطفال">
+  <h1>خريطة النبض</h1>
+  <p class="slogan">«نبض واحد.. لأطفال الوطن»</p>
+  <p>فرق طوارئ الأطفال في مناطق المملكة الـ 13، بنصيحة سلامة واحدة من كل مستشفى. تضيء المنطقة مع أول مشاركة معتمدة فيها.</p>
+  <div class="stats">
+    <div class="stat"><b id="lit">0</b><span>من 13 منطقة</span></div>
+    <div class="stat"><b id="hosp">0</b><span>مستشفى مشارك</span></div>
+    <div class="stat"><b id="tips">0</b><span>نصيحة منشورة</span></div>
+  </div>
+  <a class="btn" href="https://sspem-pulse-map.higgsfield.app/join">شاركوا مستشفاكم</a>
+  <svg viewBox="0 0 420 40" aria-hidden="true"><path d="M0 20 H150 L165 4 L180 36 L195 12 L205 20 H420"/></svg>
+</main>
+<script>
+  fetch("data/entries.json", { cache: "no-store" })
+    .then((r) => r.json())
+    .then((e) => {
+      document.getElementById("lit").textContent = new Set(e.map((x) => x.region_id)).size;
+      document.getElementById("hosp").textContent = new Set(e.map((x) => x.hospital_id)).size;
+      document.getElementById("tips").textContent = e.length;
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[
+  {"id":"riyadh","name_ar":"منطقة الرياض","name_en":"Riyadh","lat":24.30,"lng":45.40},
+  {"id":"makkah","name_ar":"منطقة مكة المكرمة","name_en":"Makkah","lat":21.60,"lng":40.70},
+  {"id":"madinah","name_ar":"منطقة المدينة المنورة","name_en":"Madinah","lat":24.70,"lng":39.60},
+  {"id":"eastern","name_ar":"المنطقة الشرقية","name_en":"Eastern Province","lat":24.60,"lng":50.10},
+  {"id":"qassim","name_ar":"منطقة القصيم","name_en":"Al-Qassim","lat":26.20,"lng":43.50},
+  {"id":"hail","name_ar":"منطقة حائل","name_en":"Hail","lat":27.40,"lng":41.60},
+  {"id":"tabuk","name_ar":"منطقة تبوك","name_en":"Tabuk","lat":28.00,"lng":36.90},
+  {"id":"northern","name_ar":"منطقة الحدود الشمالية","name_en":"Northern Borders","lat":30.20,"lng":42.30},
+  {"id":"jouf","name_ar":"منطقة الجوف","name_en":"Al-Jouf","lat":29.90,"lng":39.40},
+  {"id":"jazan","name_ar":"منطقة جازان","name_en":"Jazan","lat":17.10,"lng":42.70},
+  {"id":"najran","name_ar":"منطقة نجران","name_en":"Najran","lat":18.10,"lng":45.20},
+  {"id":"asir","name_ar":"منطقة عسير","name_en":"Asir","lat":19.00,"lng":42.60},
+  {"id":"bahah","name_ar":"منطقة الباحة","name_en":"Al-Bahah","lat":20.10,"lng":41.50}
+]
