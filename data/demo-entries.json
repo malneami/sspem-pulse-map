@@ -1,0 +1,122 @@
+[
+ {
+  "id": "demo-jazan",
+  "region_id": "jazan",
+  "region": "منطقة جازان",
+  "hospital_id": "demo-jazan",
+  "hospital": "مستشفى تجريبي للأطفال — جازان",
+  "lat": 16.889,
+  "lng": 42.551,
+  "tip": {
+   "code": "T06",
+   "title": "الغرق",
+   "parts": [
+    "الغرق صامت وسريع؛ كن دائماً على بعد ذراع من طفلك عند الماء، حتى لو كان بانيو أو سطلاً.",
+    "المسبح المنزلي يحتاج سياجاً من أربع جهات وباباً يُغلق وحده.",
+    "وفي البحر سترة نجاة معتمدة، لا عوامة منفوخة."
+   ],
+   "caption": "أفرغ البانيو والسطول فور الانتهاء، وفي التجمعات عيّنوا شخصاً بالغاً يراقب الأطفال دون جوال."
+  },
+  "published_at": "2026-11-19T06:00:00Z",
+  "media": {
+   "video": "media/demo-jazan/video.mp4",
+   "poster": "media/demo-jazan/poster.jpg",
+   "ed": [
+    "media/demo-jazan/ed1.jpg"
+   ],
+   "speaker": "media/demo-jazan/speaker.png",
+   "facade": "media/demo-jazan/facade.jpg"
+  },
+  "processed": true
+ },
+ {
+  "id": "demo-riyadh",
+  "region_id": "riyadh",
+  "region": "منطقة الرياض",
+  "hospital_id": "demo-riyadh",
+  "hospital": "مستشفى تجريبي للأطفال — الرياض",
+  "lat": 24.713,
+  "lng": 46.675,
+  "tip": {
+   "code": "T10",
+   "title": "كرسي السيارة",
+   "parts": [
+    "حضنك ليس مقعد أمان؛ في كل مشوار يجلس طفلك في كرسي يناسب عمره ووزنه.",
+    "اجعل وجه الصغير للخلف أطول فترة ممكنة.",
+    "والمقعد الخلفي مكان الأطفال حتى عمر 13 سنة."
+   ],
+   "caption": "شدّ الحزام جيداً: إذا استطعت قرصه عند الكتف فهو مرتخٍ، وانزع الجاكيت السميك قبل الربط."
+  },
+  "published_at": "2026-11-19T07:00:00Z",
+  "media": {
+   "video": "media/demo-riyadh/video.mp4",
+   "poster": "media/demo-riyadh/poster.jpg",
+   "ed": [
+    "media/demo-riyadh/ed1.jpg"
+   ],
+   "speaker": "media/demo-riyadh/speaker.png",
+   "facade": "media/demo-riyadh/facade.jpg"
+  },
+  "processed": true
+ },
+ {
+  "id": "demo-makkah",
+  "region_id": "makkah",
+  "region": "منطقة مكة المكرمة",
+  "hospital_id": "demo-makkah",
+  "hospital": "مستشفى تجريبي للأطفال — جدة",
+  "lat": 21.543,
+  "lng": 39.173,
+  "tip": {
+   "code": "T01",
+   "title": "البطاريات الدائرية",
+   "parts": [
+    "البطارية الدائرية إذا بلعها الطفل تحرق المريء خلال ساعتين.",
+    "إذا شككت أنه بلعها، اذهب للطوارئ فوراً حتى لو بدا بخير.",
+    "وتأكد أن غطاء البطارية في كل لعبة مثبت ببرغي."
+   ],
+   "caption": "احفظ البطاريات الجديدة والمستعملة بعيداً عن الأطفال، ولا تحاول إخراج البطارية بنفسك."
+  },
+  "published_at": "2026-11-19T08:00:00Z",
+  "media": {
+   "video": "media/demo-makkah/video.mp4",
+   "poster": "media/demo-makkah/poster.jpg",
+   "ed": [
+    "media/demo-makkah/ed1.jpg"
+   ],
+   "speaker": "media/demo-makkah/speaker.png",
+   "facade": "media/demo-makkah/facade.jpg"
+  },
+  "processed": true
+ },
+ {
+  "id": "demo-eastern",
+  "region_id": "eastern",
+  "region": "المنطقة الشرقية",
+  "hospital_id": "demo-eastern",
+  "hospital": "مستشفى تجريبي للأطفال — الدمام",
+  "lat": 26.392,
+  "lng": 49.977,
+  "tip": {
+   "code": "T16",
+   "title": "النوم الآمن للرضيع",
+   "parts": [
+    "ضع رضيعك على ظهره في كل نومة.",
+    "في سريره فراش ثابت فقط، بلا وسائد ولا ألحفة ولا ألعاب.",
+    "وشاركه الغرفة لا السرير، ولا تنم معه على الكنب."
+   ],
+   "caption": "النوم على الظهر يقلل خطر متلازمة موت الرضيع المفاجئ."
+  },
+  "published_at": "2026-11-19T09:00:00Z",
+  "media": {
+   "video": "media/demo-eastern/video.mp4",
+   "poster": "media/demo-eastern/poster.jpg",
+   "ed": [
+    "media/demo-eastern/ed1.jpg"
+   ],
+   "speaker": "media/demo-eastern/speaker.png",
+   "facade": "media/demo-eastern/facade.jpg"
+  },
+  "processed": true
+ }
+]

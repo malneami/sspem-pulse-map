@@ -2,56 +2,276 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>خريطة النبض | الجمعية السعودية لطب طوارئ الأطفال</title>
 <meta name="description" content="نبض واحد.. لأطفال الوطن — فرق طوارئ الأطفال في مناطق المملكة الـ 13 بنصيحة سلامة واحدة من كل مستشفى.">
-<meta property="og:title" content="خريطة النبض">
-<meta property="og:description" content="نبض واحد.. لأطفال الوطن — نصيحة سلامة واحدة من فريق طوارئ الأطفال في كل مستشفى.">
+<meta property="og:title" content="خريطة النبض — نبض واحد.. لأطفال الوطن">
+<meta property="og:description" content="اضغطوا على أي نقطة نابضة لتشاهدوا نصيحة فريق طوارئ الأطفال في ذلك المستشفى.">
 <meta property="og:url" content="https://malneami.github.io/sspem-pulse-map/">
+<link rel="icon" href="assets/logo-gold.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap">
 <style>
-  :root { --navy:#1b2a5c; --navy-deep:#111b40; --amber:#f2a33a; --gold:#d4af37; }
-  body { margin:0; min-height:100dvh; font-family:Tajawal,system-ui,sans-serif; color:#fff; background:radial-gradient(1000px 600px at 80% -10%, rgba(242,163,58,.18), transparent 60%), linear-gradient(160deg,#16224f,#0c1433); display:grid; place-items:center; text-align:center; }
-  main { padding:32px 18px; max-width:560px; }
-  img { width:210px; }
-  h1 { margin:18px 0 4px; font-size:44px; font-weight:900; color:var(--gold); }
-  .slogan { font-size:20px; font-weight:800; color:var(--amber); margin:0 0 18px; }
-  p { line-height:1.8; color:rgba(255,255,255,.85); }
-  .stats { display:flex; gap:10px; justify-content:center; margin:22px 0; }
-  .stat { background:rgba(255,255,255,.07); border:1.5px solid rgba(212,175,55,.35); border-radius:14px; padding:10px 14px; min-width:96px; }
-  .stat b { display:block; font-size:28px; color:var(--gold); }
-  .stat span { font-size:13px; color:rgba(255,255,255,.75); font-weight:700; }
-  a.btn { display:inline-block; margin-top:6px; padding:14px 30px; border-radius:12px; font-weight:900; font-size:18px; text-decoration:none; color:var(--navy-deep); background:linear-gradient(180deg,#f6c46a,var(--amber)); box-shadow:0 6px 0 #a86a12; }
-  svg { width:min(420px,80vw); height:40px; margin:18px auto 0; display:block; }
-  svg path { stroke:var(--amber); stroke-width:3; fill:none; stroke-dasharray:420; animation:beat 2.4s linear infinite; }
-  @keyframes beat { from { stroke-dashoffset:420; } to { stroke-dashoffset:0; } }
-  @media (prefers-reduced-motion: reduce) { svg path { animation:none; stroke-dasharray:none; } }
+  :root { --navy:#1b2a5c; --navy-deep:#111b40; --amber:#f2a33a; --gold:#d4af37; --gold-soft:#ecd68d; --paper:#fbf6ea; --ink:#1d2433; --mute:#5b6478; --bad:#c8102e; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { font-family:Tajawal, system-ui, sans-serif; color:#fff; min-height:100dvh;
+    background:radial-gradient(1100px 600px at 85% -10%, rgba(242,163,58,.16), transparent 60%), radial-gradient(900px 600px at 0% 110%, rgba(212,175,55,.10), transparent 60%), linear-gradient(160deg,#16224f,#0b1330); }
+  header { display:flex; align-items:center; gap:14px; max-width:1100px; margin:0 auto; padding:14px 16px 4px; }
+  header img { height:56px; }
+  header h1 { margin:0; font-size:30px; font-weight:900; color:var(--gold); line-height:1.1; }
+  header p { margin:2px 0 0; color:var(--amber); font-weight:800; }
+  .stats { display:flex; gap:8px; max-width:1100px; margin:10px auto 0; padding:0 16px; }
+  .stat { flex:1; background:rgba(255,255,255,.06); border:1.5px solid rgba(212,175,55,.3); border-radius:14px; padding:8px 10px; text-align:center; }
+  .stat b { display:block; font-size:26px; color:var(--gold); font-weight:900; }
+  .stat span { font-size:12.5px; color:rgba(255,255,255,.75); font-weight:700; }
+  .demo-banner { max-width:1100px; margin:10px auto 0; padding:0 16px; }
+  .demo-banner div { background:rgba(242,163,58,.16); border:1.5px dashed var(--amber); border-radius:12px; padding:8px 12px; font-weight:800; font-size:14px; }
+  .map-wrap { position:relative; max-width:1100px; margin:6px auto 0; padding:0 8px; }
+  svg#map { width:100%; height:auto; display:block; touch-action:manipulation; }
+  .region { fill:#25305a; stroke:rgba(236,214,141,.35); stroke-width:1.4; transition:fill .8s; }
+  .region.lit { fill:url(#litGrad); stroke:rgba(255,236,180,.9); filter:url(#glow); }
+  .region:hover { fill:#2f3b6a; }
+  .region.lit:hover { fill:url(#litGrad); }
+  .rlabel { font-size:15px; font-weight:800; fill:rgba(255,255,255,.55); text-anchor:middle; pointer-events:none; }
+  .rlabel.lit { fill:#fff; }
+  .dot { cursor:pointer; }
+  .dot .core { fill:var(--amber); stroke:#fff; stroke-width:2.5; }
+  .dot .ring { fill:none; stroke:var(--amber); stroke-width:3; transform-box:fill-box; transform-origin:center; animation:pulse 2.2s ease-out infinite; }
+  .dot .ring.r2 { animation-delay:1.1s; }
+  .dot text { fill:var(--navy-deep); font-weight:900; font-size:14px; text-anchor:middle; dominant-baseline:central; pointer-events:none; }
+  .dot:focus { outline:none; }
+  .dot:focus .core, .dot:hover .core { fill:#ffd27a; }
+  @keyframes pulse { 0% { transform:scale(1); opacity:.9; } 100% { transform:scale(3.4); opacity:0; } }
+  .empty-note { position:absolute; inset:auto 0 18% 0; text-align:center; pointer-events:none; }
+  .empty-note span { background:rgba(17,27,64,.85); border:1.5px solid rgba(212,175,55,.4); border-radius:999px; padding:8px 16px; font-weight:800; font-size:14px; }
+  .hint { text-align:center; color:rgba(255,255,255,.7); font-size:13.5px; margin:4px 0 0; }
+  .latest { max-width:1100px; margin:14px auto 0; padding:0 16px; }
+  .latest h2 { font-size:17px; color:var(--gold-soft); margin:0 0 8px; }
+  .strip { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:8px; }
+  .chip { scroll-snap-align:start; flex:none; width:210px; background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.12); border-radius:14px; padding:8px; display:flex; gap:8px; align-items:center; cursor:pointer; color:#fff; font-family:inherit; text-align:right; }
+  .chip img { width:46px; height:64px; object-fit:cover; border-radius:8px; flex:none; }
+  .chip b { display:block; font-size:13.5px; line-height:1.4; }
+  .chip span { font-size:12px; color:var(--amber); font-weight:800; }
+  .cta { text-align:center; margin:18px 0 8px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; font-weight:900; font-size:17px; border:0; border-radius:12px; padding:13px 26px; cursor:pointer; text-decoration:none; color:var(--navy-deep); background:linear-gradient(180deg,#f6c46a,var(--amber)); box-shadow:0 6px 0 #a86a12; }
+  footer { text-align:center; font-size:13px; color:rgba(255,255,255,.6); padding:14px 16px 26px; }
+  footer a { color:var(--gold-soft); }
+
+  /* ---------- card ---------- */
+  dialog { border:0; padding:0; background:transparent; max-width:min(560px,100vw); width:100%; max-height:100dvh; }
+  dialog::backdrop { background:rgba(5,9,25,.78); backdrop-filter:blur(3px); }
+  .card { background:var(--paper); color:var(--ink); border-radius:22px; overflow:hidden; margin:10px; box-shadow:0 30px 70px rgba(0,0,0,.55); max-height:calc(100dvh - 20px); overflow-y:auto; }
+  .card-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px; background:var(--navy); color:#fff; position:sticky; top:0; z-index:3; }
+  .card-head b { font-size:17px; line-height:1.35; }
+  .card-head span { display:block; color:var(--amber); font-size:13px; font-weight:800; }
+  .x { background:rgba(255,255,255,.12); color:#fff; border:0; width:36px; height:36px; border-radius:50%; font-size:20px; cursor:pointer; flex:none; }
+  .depth { position:relative; height:300px; overflow:hidden; background:#0c1433; perspective:900px; }
+  .depth .bg { position:absolute; inset:-30px; background-size:cover; background-position:center; filter:brightness(.82) saturate(1.05); transform:translate3d(calc(var(--dx,0) * -14px), calc(var(--dy,0) * -10px), 0) scale(1.06); transition:transform .15s linear; }
+  .depth .fg { position:absolute; bottom:-6px; left:50%; height:92%; transform:translate3d(calc(-50% + var(--dx,0) * 16px), calc(var(--dy,0) * 8px), 0); transition:transform .15s linear; filter:drop-shadow(0 18px 24px rgba(0,0,0,.45)); }
+  .depth .tag { position:absolute; top:10px; right:10px; background:rgba(17,27,64,.8); color:#fff; font-size:12px; font-weight:800; border-radius:999px; padding:4px 10px; }
+  .video { display:block; width:100%; max-height:70dvh; background:#000; aspect-ratio:9/16; object-fit:contain; }
+  .body { padding:14px 16px 18px; }
+  .tip-title { margin:0 0 6px; color:var(--navy); font-size:22px; font-weight:900; }
+  .parts { margin:0; padding-inline-start:20px; line-height:1.8; font-size:16px; }
+  .caption { margin:10px 0 0; background:rgba(242,163,58,.13); border-radius:12px; padding:9px 12px; font-size:14.5px; line-height:1.7; }
+  .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-top:12px; }
+  .gallery img { scroll-snap-align:start; height:150px; border-radius:12px; flex:none; }
+  .actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .act { font-family:inherit; font-weight:900; font-size:14.5px; border-radius:12px; padding:10px 14px; cursor:pointer; border:2px solid rgba(27,42,92,.16); background:#fff; color:var(--navy); text-decoration:none; }
+  .act.wa { background:#25d366; color:#0b3d1f; border-color:#25d366; }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--navy); color:#fff; padding:10px 18px; border-radius:999px; font-weight:800; opacity:0; transition:opacity .3s; pointer-events:none; z-index:10; }
+  .toast.on { opacity:1; }
+  .list-card .item { display:flex; gap:10px; align-items:center; padding:10px; border-radius:12px; background:#fff; margin:8px 0; cursor:pointer; border:1.5px solid rgba(27,42,92,.1); }
+  .list-card .item img { width:48px; height:64px; object-fit:cover; border-radius:8px; }
+  @media (prefers-reduced-motion: reduce) { .dot .ring { animation:none; opacity:.4; } .depth .bg, .depth .fg { transition:none; } }
+  @media (min-width: 900px) { header h1 { font-size:36px; } }
 </style>
 </head>
 <body>
-<main>
+<header>
   <img src="assets/logo-gold.svg" alt="الجمعية السعودية لطب طوارئ الأطفال">
-  <h1>خريطة النبض</h1>
-  <p class="slogan">«نبض واحد.. لأطفال الوطن»</p>
-  <p>فرق طوارئ الأطفال في مناطق المملكة الـ 13، بنصيحة سلامة واحدة من كل مستشفى. تضيء المنطقة مع أول مشاركة معتمدة فيها.</p>
-  <div class="stats">
-    <div class="stat"><b id="lit">0</b><span>من 13 منطقة</span></div>
-    <div class="stat"><b id="hosp">0</b><span>مستشفى مشارك</span></div>
-    <div class="stat"><b id="tips">0</b><span>نصيحة منشورة</span></div>
+  <div>
+    <h1>خريطة النبض</h1>
+    <p>«نبض واحد.. لأطفال الوطن»</p>
   </div>
-  <a class="btn" href="https://sspem-pulse-map.higgsfield.app/join">شاركوا مستشفاكم</a>
-  <svg viewBox="0 0 420 40" aria-hidden="true"><path d="M0 20 H150 L165 4 L180 36 L195 12 L205 20 H420"/></svg>
-</main>
+</header>
+<div class="stats" aria-live="polite">
+  <div class="stat"><b id="lit">0</b><span>من 13 منطقة مضيئة</span></div>
+  <div class="stat"><b id="hosp">0</b><span>مستشفى مشارك</span></div>
+  <div class="stat"><b id="tips">0</b><span>نصيحة منشورة</span></div>
+</div>
+<div class="demo-banner" id="demoBanner" hidden><div>عرض تجريبي: المستشفيات والمقاطع هنا أمثلة توضيحية فقط، وستُستبدل بالمشاركات المعتمدة.</div></div>
+<div class="map-wrap">
+  <svg id="map" role="img" aria-label="خريطة مناطق المملكة ومشاركات فرق طوارئ الأطفال"></svg>
+  <div class="empty-note" id="emptyNote" hidden><span>تضيء المناطق مع أول مشاركة معتمدة فيها</span></div>
+</div>
+<p class="hint">كل نقطة نابضة = فريق طوارئ أطفال قدّم نصيحة. اضغطوا عليها لتشاهدوا المقطع.</p>
+<section class="latest" id="latestWrap" hidden>
+  <h2>آخر المشاركات</h2>
+  <div class="strip" id="strip"></div>
+</section>
+<div class="cta"><a class="btn" id="joinBtn" href="https://sspem-pulse-map.higgsfield.app/join">شاركوا مستشفاكم</a></div>
+<footer>الجمعية السعودية لطب طوارئ الأطفال • <a href="https://spem.org.sa/ar" rel="noopener">spem.org.sa</a> • #نبض_واحد</footer>
+
+<dialog id="dlg" aria-label="تفاصيل المشاركة"></dialog>
+<div class="toast" id="toast"></div>
+
 <script>
-  fetch("data/entries.json", { cache: "no-store" })
-    .then((r) => r.json())
-    .then((e) => {
-      document.getElementById("lit").textContent = new Set(e.map((x) => x.region_id)).size;
-      document.getElementById("hosp").textContent = new Set(e.map((x) => x.hospital_id)).size;
-      document.getElementById("tips").textContent = e.length;
-    })
-    .catch(() => {});
+(() => {
+  const params = new URLSearchParams(location.search);
+  const DEMO = params.has("demo");
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("map");
+  const dlg = document.getElementById("dlg");
+  let geo, regions, entries = [];
+
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(SVGNS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent && parent.appendChild(n); return n; };
+  const proj = (lat, lng) => [(lng - geo.lon0) * geo.kx, (geo.lat0 - lat) * geo.ky];
+  const toast = (m) => { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("on"); setTimeout(() => t.classList.remove("on"), 2200); };
+
+  async function loadJSON(p) { const r = await fetch(p, { cache: "no-store" }); if (!r.ok) throw new Error(p); return r.json(); }
+
+  function drawBase() {
+    svg.setAttribute("viewBox", `0 0 ${geo.width} ${geo.height}`);
+    const defs = el("defs", {}, svg);
+    const lg = el("linearGradient", { id: "litGrad", x1: "0", y1: "0", x2: "0", y2: "1" }, defs);
+    el("stop", { offset: "0", "stop-color": "#f6c46a" }, lg);
+    el("stop", { offset: "1", "stop-color": "#c9862a" }, lg);
+    const f = el("filter", { id: "glow", x: "-20%", y: "-20%", width: "140%", height: "140%" }, defs);
+    el("feGaussianBlur", { stdDeviation: "6", result: "b" }, f);
+    const m = el("feMerge", {}, f); el("feMergeNode", { in: "b" }, m); el("feMergeNode", { in: "SourceGraphic" }, m);
+    const gR = el("g", { id: "regions" }, svg);
+    for (const r of regions) {
+      const p = el("path", { d: geo.paths[r.id], class: "region", id: `r-${r.id}` }, gR);
+      const t = el("title", {}, p); t.textContent = r.name_ar;
+    }
+    const gL = el("g", { id: "labels" }, svg);
+    for (const r of regions) {
+      const [x, y] = proj(r.lat, r.lng);
+      const t = el("text", { x, y: y - 16, class: "rlabel", id: `l-${r.id}` }, gL);
+      t.textContent = r.name_ar.replace(/^منطقة /, "").replace(/^المنطقة /, "");
+    }
+    el("g", { id: "dots" }, svg);
+  }
+
+  function position(e, i) {
+    if (Number.isFinite(e.lat) && Number.isFinite(e.lng)) return proj(e.lat, e.lng);
+    const r = regions.find((x) => x.id === e.region_id); // وسط المنطقة مع إزاحة بسيطة
+    const [x, y] = proj(r.lat, r.lng); const a = i * 2.4; return [x + Math.cos(a) * 16, y + Math.sin(a) * 16];
+  }
+
+  function render() {
+    const lit = new Set(entries.map((e) => e.region_id));
+    for (const r of regions) {
+      document.getElementById(`r-${r.id}`).classList.toggle("lit", lit.has(r.id));
+      document.getElementById(`l-${r.id}`).classList.toggle("lit", lit.has(r.id));
+    }
+    document.getElementById("lit").textContent = lit.size;
+    document.getElementById("hosp").textContent = new Set(entries.map((e) => e.hospital_id)).size;
+    document.getElementById("tips").textContent = entries.length;
+    document.getElementById("emptyNote").hidden = entries.length > 0;
+
+    // تجميع النقاط المتقاربة في دائرة برقم
+    const pts = entries.map((e, i) => ({ e, p: position(e, i) }));
+    const groups = [];
+    for (const pt of pts) {
+      const g = groups.find((g) => Math.hypot(g.x - pt.p[0], g.y - pt.p[1]) < 22);
+      if (g) g.items.push(pt.e); else groups.push({ x: pt.p[0], y: pt.p[1], items: [pt.e] });
+    }
+    const gD = document.getElementById("dots"); gD.innerHTML = "";
+    for (const g of groups) {
+      const n = g.items.length;
+      const d = el("g", { class: "dot", tabindex: "0", role: "button", "aria-label": n > 1 ? `${n} مشاركات` : `${g.items[0].hospital}: ${g.items[0].tip.title}` }, gD);
+      el("circle", { cx: g.x, cy: g.y, r: 9, class: "ring" }, d);
+      el("circle", { cx: g.x, cy: g.y, r: 9, class: "ring r2" }, d);
+      el("circle", { cx: g.x, cy: g.y, r: n > 1 ? 14 : 9, class: "core" }, d);
+      if (n > 1) { const t = el("text", { x: g.x, y: g.y }, d); t.textContent = n; }
+      const open = () => (n > 1 ? openList(g.items) : openCard(g.items[0]));
+      d.addEventListener("click", open);
+      d.addEventListener("keydown", (ev) => (ev.key === "Enter" || ev.key === " ") && (ev.preventDefault(), open()));
+    }
+
+    const strip = document.getElementById("strip");
+    const latest = [...entries].sort((a, b) => (b.published_at || "").localeCompare(a.published_at || "")).slice(0, 12);
+    document.getElementById("latestWrap").hidden = latest.length === 0;
+    strip.innerHTML = latest.map((e) => `<button class="chip" data-id="${esc(e.id)}"><img src="${esc(e.media.poster)}" alt=""><div><b>${esc(e.hospital)}</b><span>${esc(e.tip.title)}</span></div></button>`).join("");
+    strip.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => openCard(entries.find((e) => e.id === b.dataset.id))));
+  }
+
+  function shareUrl(e) { const u = new URL(location.href); u.search = ""; if (DEMO) u.searchParams.set("demo", "1"); u.searchParams.set("e", e.id); return u.toString(); }
+
+  function openCard(e) {
+    if (!e) return;
+    const m = e.media, url = shareUrl(e);
+    const msg = `${e.tip.title} — نصيحة من فريق طوارئ الأطفال في ${e.hospital} 💛\n«نبض واحد.. لأطفال الوطن»\n${url}`;
+    const gallery = [...(m.ed || []), m.facade].filter(Boolean);
+    dlg.innerHTML = `<div class="card">
+      <div class="card-head"><div><b>${esc(e.hospital)}</b><span>${esc(e.region)}</span></div><button class="x" aria-label="إغلاق">×</button></div>
+      ${m.speaker ? `<div class="depth" id="depth"><div class="bg" style="background-image:url('${esc((m.ed || [])[0] || m.facade || m.poster)}')"></div><img class="fg" src="${esc(m.speaker)}" alt="المتحدث"><span class="tag">حرّكوا الجوال أو الماوس</span></div>` : ""}
+      <video class="video" src="${esc(m.video)}" poster="${esc(m.poster)}" controls playsinline preload="metadata"></video>
+      <div class="body">
+        <h3 class="tip-title">${esc(e.tip.title)}</h3>
+        <ol class="parts">${e.tip.parts.map((p) => `<li>${esc(p)}</li>`).join("")}</ol>
+        ${e.tip.caption ? `<p class="caption">${esc(e.tip.caption)}</p>` : ""}
+        ${gallery.length ? `<div class="gallery">${gallery.map((g) => `<img src="${esc(g)}" alt="صورة من المنشأة" loading="lazy">`).join("")}</div>` : ""}
+        <div class="actions">
+          <button class="act share">مشاركة الرابط</button>
+          <a class="act wa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">واتساب</a>
+          <a class="act" href="https://spem.org.sa/ar" target="_blank" rel="noopener">موقع الجمعية</a>
+        </div>
+      </div></div>`;
+    dlg.querySelector(".x").onclick = () => dlg.close();
+    dlg.querySelector(".share").onclick = async () => {
+      try { if (navigator.share) { await navigator.share({ title: "خريطة النبض", text: msg, url }); return; } await navigator.clipboard.writeText(url); toast("تم نسخ الرابط"); } catch {}
+    };
+    setupDepth(dlg.querySelector("#depth"));
+    if (!dlg.open) dlg.showModal();
+    history.replaceState(null, "", url);
+  }
+
+  function openList(items) {
+    dlg.innerHTML = `<div class="card list-card"><div class="card-head"><div><b>${items.length} مشاركات في هذا المكان</b></div><button class="x" aria-label="إغلاق">×</button></div><div class="body">
+      ${items.map((e) => `<div class="item" data-id="${esc(e.id)}"><img src="${esc(e.media.poster)}" alt=""><div><b>${esc(e.hospital)}</b><div style="color:#b06a0b;font-weight:800">${esc(e.tip.title)}</div></div></div>`).join("")}</div></div>`;
+    dlg.querySelector(".x").onclick = () => dlg.close();
+    dlg.querySelectorAll(".item").forEach((it) => it.addEventListener("click", () => openCard(items.find((e) => e.id === it.dataset.id))));
+    if (!dlg.open) dlg.showModal();
+  }
+
+  function setupDepth(box) {
+    if (!box) return;
+    const set = (dx, dy) => { box.style.setProperty("--dx", Math.max(-1, Math.min(1, dx)).toFixed(3)); box.style.setProperty("--dy", Math.max(-1, Math.min(1, dy)).toFixed(3)); };
+    box.addEventListener("pointermove", (ev) => { const r = box.getBoundingClientRect(); set(((ev.clientX - r.left) / r.width) * 2 - 1, ((ev.clientY - r.top) / r.height) * 2 - 1); });
+    box.addEventListener("pointerleave", () => set(0, 0));
+    const onTilt = (ev) => set((ev.gamma || 0) / 25, ((ev.beta || 0) - 40) / 30);
+    const start = () => window.addEventListener("deviceorientation", onTilt);
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+      box.addEventListener("click", () => DeviceOrientationEvent.requestPermission().then((s) => s === "granted" && start()).catch(() => {}), { once: true });
+    } else start();
+    dlg.addEventListener("close", () => window.removeEventListener("deviceorientation", onTilt), { once: true });
+  }
+
+  dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
+  dlg.addEventListener("close", () => { dlg.querySelectorAll("video").forEach((v) => v.pause()); const u = new URL(location.href); u.searchParams.delete("e"); history.replaceState(null, "", u); });
+
+  async function refresh() {
+    try {
+      entries = await loadJSON(DEMO ? "data/demo-entries.json" : "data/entries.json");
+      render();
+    } catch {}
+  }
+
+  (async () => {
+    [geo, regions] = await Promise.all([loadJSON("data/shapes.json"), loadJSON("data/regions.json")]);
+    document.getElementById("demoBanner").hidden = !DEMO;
+    drawBase();
+    await refresh();
+    const wanted = params.get("e");
+    if (wanted) openCard(entries.find((e) => e.id === wanted));
+    if (!DEMO) setInterval(refresh, 30000); // من يبقي الصفحة مفتوحة يرى المملكة تضيء أمامه
+  })();
+})();
 </script>
 </body>
 </html>
