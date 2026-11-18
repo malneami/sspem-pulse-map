@@ -191,7 +191,11 @@ def process(job_path: Path) -> dict:
         demo_photo("واجهة المستشفى", out / "facade.jpg", (120, 92, 52))
         media.update(speaker=f"media/{eid}/speaker.png", ed=[f"media/{eid}/ed1.jpg"], facade=f"media/{eid}/facade.jpg")
     else:
-        for key in ("speaker", "facade"):
+        # المتحدث مقصوص الخلفية (من النموذج) هو ما يظهر في بطاقة العمق؛ الصورة الأصلية احتياط
+        if photos.get("cutout"):
+            download(photos["cutout"], out / "speaker.png")
+            media["speaker"] = f"media/{eid}/speaker.png"
+        for key in ("facade",) if photos.get("cutout") else ("speaker", "facade"):
             if photos.get(key):
                 ext = photos[key].split("?")[0].rsplit(".", 1)[-1].lower()
                 ext = ext if ext in ("jpg", "jpeg", "png", "webp") else "jpg"
