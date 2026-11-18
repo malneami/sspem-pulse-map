@@ -87,6 +87,7 @@
   .list-card .item img { width:48px; height:64px; object-fit:cover; border-radius:8px; }
   @media (prefers-reduced-motion: reduce) { .dot .ring { animation:none; opacity:.4; } .depth .bg, .depth .fg { transition:none; } }
   @media (min-width: 900px) { header h1 { font-size:36px; } }
+  .doctor { margin: 0 0 6px; color: #8a5a10; font-size: 14.5px; } .doctor b { color: #1B2A5C; }
 </style>
 </head>
 <body>
@@ -214,6 +215,7 @@
       ${m.speaker ? `<div class="depth" id="depth"><div class="bg" style="background-image:url('${esc((m.ed || [])[0] || m.facade || m.poster)}')"></div><img class="fg" src="${esc(m.speaker)}" alt="المتحدث"><span class="tag">حرّكوا الجوال أو الماوس</span></div>` : ""}
       <video class="video" src="${esc(m.video)}" poster="${esc(m.poster)}" controls playsinline preload="metadata"></video>
       <div class="body">
+        ${e.doctor && e.doctor.name ? `<p class="doctor"><b>${esc(e.doctor.name)}</b>${e.doctor.title ? ` · ${esc(e.doctor.title)}` : ""}</p>` : ""}
         <h3 class="tip-title">${esc(e.tip.title)}</h3>
         <ol class="parts">${e.tip.parts.map((p) => `<li>${esc(p)}</li>`).join("")}</ol>
         ${e.tip.caption ? `<p class="caption">${esc(e.tip.caption)}</p>` : ""}

@@ -2,7 +2,7 @@
 """خريطة النبض — المعالجة الآلية للمقاطع المعتمدة.
 
 لكل ملف مهمة في tools/jobs/*.json:
-  1. ينزّل المقطع الأصلي (أو يولّد مقطعاً توضيحياً للعرض التجريبي).
+  1. ينزّل الفيلم النهائي من استوديو المراجعة (composed) أو المقطع الأصلي (أو يولّد مقطعاً توضيحياً للعرض التجريبي).
   2. يطبع على المقطع: اسم المستشفى المصحّح، المنطقة، شعار الجمعية والحملة.
   3. يضغطه للويب (720×1280، H.264) ويستخرج صورة غلاف.
   4. ينزّل صور المنشأة والمتحدث (أو يولّد صوراً توضيحية).
@@ -193,17 +193,29 @@ def process(job_path: Path) -> dict:
         demo_clip(entry, raw)
     else:
         download(job["video_url"], raw)
-    ov = tmp / "overlay.png"
-    overlay(entry).save(ov)
     video = out / "video.mp4"
-    subprocess.run(
-        ["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-i", str(ov), "-filter_complex",
-         f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps=30[v];[v][1:v]overlay=0:0[o]",
-         "-map", "[o]", "-map", "0:a?", "-t", "30", "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
-         "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", str(video)],
-        check=True,
-    )
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "1", "-i", str(video), "-frames:v", "1", "-q:v", "4",
+    if job.get("composed"):
+        # فيلم نهائي أنتجه المراجع في الاستوديو (العناوين والنصوص فيه): ضغط للويب فقط
+        subprocess.run(
+            ["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-vf",
+             f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps=30",
+             "-map", "0:v:0", "-map", "0:a?", "-t", "60", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-movflags", "+faststart", str(video)],
+            check=True,
+        )
+        poster_at = "4.6"  # مشهد العمق: المتحدث واسمه
+    else:
+        ov = tmp / "overlay.png"
+        overlay(entry).save(ov)
+        subprocess.run(
+            ["ffmpeg", "-y", "-loglevel", "error", "-i", str(raw), "-i", str(ov), "-filter_complex",
+             f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps=30[v];[v][1:v]overlay=0:0[o]",
+             "-map", "[o]", "-map", "0:a?", "-t", "30", "-c:v", "libx264", "-preset", "veryfast", "-crf", "24",
+             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", str(video)],
+            check=True,
+        )
+        poster_at = "1"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", poster_at, "-i", str(video), "-frames:v", "1", "-q:v", "4",
                     str(out / "poster.jpg")], check=True)
 
     photos = job.get("photos") or {}
